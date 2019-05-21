@@ -1,3 +1,37 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Post, Category, Tag
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'status',
+        'is_nav',
+        'owner',
+        'created_time',
+    )
+    fields = (
+        'name',
+        'status',
+        'is_nav',
+    )
+
+    def save_model(self, request, obj, form, change):
+        obj.owner = request.user
+        return super(CategoryAdmin, self).save_model(request, obj, form, change)
+
+
+@admin.register(Tag)
+class TagAdmin(admin.ModelAdmin):
+    list_display = (
+        'name',
+        'status',
+        'owner',
+        'created_time',
+    )
+
+    def save_model(self, request, obj, form, change):
+        obj.owner = request.user
+        return super(TagAdmin, self).save_model(request, obj, form, change)

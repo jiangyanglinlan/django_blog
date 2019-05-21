@@ -36,7 +36,7 @@ class Tag(models.Model):
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
     class Meta:
-        verbose_name = verbose_name = '标签'
+        verbose_name = verbose_name_plural = '标签'
 
 
 class Post(models.Model):
