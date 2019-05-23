@@ -22,3 +22,19 @@ class Comment(models.Model):
 
     class Meta:
         verbose_name = verbose_name_plural = '评论'
+
+    def __str__(self):
+        return self.short_content
+
+    @property
+    def short_content(self, length=10, etc='...'):
+        '''
+        截取评论开头
+        '''
+        c = self.content
+        if length >= len(c):
+            return c
+
+        end_index = length - len(etc)
+        c = c[:end_index] + etc
+        return c
