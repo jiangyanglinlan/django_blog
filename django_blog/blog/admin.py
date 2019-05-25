@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
 
+from django_blog.custom_site import custom_site
 from .models import (
     Post,
     Category,
@@ -10,7 +11,7 @@ from .models import (
 from .admin_forms import PostAdminForm
 
 
-@admin.register(Category)
+@admin.register(Category, site=custom_site)
 class CategoryAdmin(admin.ModelAdmin):
     form = PostAdminForm
     list_display = (
@@ -37,7 +38,7 @@ class CategoryAdmin(admin.ModelAdmin):
     post_count.short_description = '文章数量'
 
 
-@admin.register(Tag)
+@admin.register(Tag, site=custom_site)
 class TagAdmin(admin.ModelAdmin):
     list_display = (
         'name',
@@ -72,7 +73,7 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
         return queryset
 
 
-@admin.register(Post)
+@admin.register(Post, site=custom_site)
 class PostAdmin(admin.ModelAdmin):
     form = PostAdminForm
     list_display = [
@@ -123,7 +124,7 @@ class PostAdmin(admin.ModelAdmin):
     def operator(self, obj):
         return format_html(
             '<a href="{}">编辑</a>',
-            reverse('admin:blog_post_change', args=(obj.id, ))
+            reverse('cus_admin:blog_post_change', args=(obj.id, ))
         )
 
     def save_model(self, request, obj, form, change):
