@@ -12,6 +12,7 @@ from .admin_forms import PostAdminForm
 
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
+    form = PostAdminForm
     list_display = (
         'name',
         'status',
@@ -73,6 +74,7 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
+    form = PostAdminForm
     list_display = [
         'title',
         'category',
@@ -131,11 +133,3 @@ class PostAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(PostAdmin, self).get_queryset(request)
         return qs.filter(owner=request.user)
-
-    class Media:
-        css = {
-            'all': ('https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css', ),
-        }
-        js = (
-            'https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.js',
-        )
