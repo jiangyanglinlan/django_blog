@@ -61,7 +61,7 @@ class Post(models.Model):
     status = models.PositiveIntegerField(default=STATUS_NORMAL,
                                          choices=STATUS_ITEM, verbose_name='状态')
     category = models.ForeignKey(Category, verbose_name='分类', on_delete=models.CASCADE)
-    tag = models.ForeignKey(Tag, verbose_name='标签', on_delete=models.CASCADE)
+    tag = models.ManyToManyField(Tag, verbose_name='标签')
     owner = models.ForeignKey(User, verbose_name='作者', on_delete=models.CASCADE)
     created_time = models.DateTimeField(auto_now_add=True, verbose_name='创建时间')
 
