@@ -7,6 +7,7 @@ from .models import (
     Category,
     Tag,
 )
+from .admin_forms import PostAdminForm
 
 
 @admin.register(Category)
@@ -89,13 +90,33 @@ class PostAdmin(admin.ModelAdmin):
     actions_on_top = True
     actions_on_bottom = True
 
-    fields = (
-        ('category', 'title'),
-        'desc',
-        'status',
-        'content',
-        'tag'
+    # 隐藏 owner
+    exclude = ('owner', )
+
+    fieldsets = (
+        ('文章分类', {
+            'description': '分类和标签',
+            'fields': (
+                ('category', 'tag'),
+            ),
+        }),
+        ('内容', {
+            'description': '文章内容',
+            'fields': (
+                'title',
+                'desc',
+                'content',
+            ),
+        }),
+        ('文章状态', {
+            'description': '正常、删除和草稿',
+            'fields': (
+                'status',
+            ),
+        }),
     )
+
+    filter_horizontal = ('tag', )
 
     def operator(self, obj):
         return format_html(
@@ -110,3 +131,11 @@ class PostAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
         qs = super(PostAdmin, self).get_queryset(request)
         return qs.filter(owner=request.user)
+
+    class Media:
+        css = {
+            'all': ('https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css', ),
+        }
+        js = (
+            'https://cdn.bootcss.com/bootstrap/4.0.0-beta.2/js/bootstrap.bundle.js',
+        )
