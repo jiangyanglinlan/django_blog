@@ -89,13 +89,33 @@ class PostAdmin(admin.ModelAdmin):
     actions_on_top = True
     actions_on_bottom = True
 
-    fields = (
-        ('category', 'title'),
-        'desc',
-        'status',
-        'content',
-        'tag'
+    # 隐藏 owner
+    exclude = ('owner', )
+
+    fieldsets = (
+        ('文章分类', {
+            'description': '分类和标签',
+            'fields': (
+                ('category', 'tag'),
+            ),
+        }),
+        ('内容', {
+            'description': '文章内容',
+            'fields': (
+                'title',
+                'desc',
+                'content',
+            ),
+        }),
+        ('文章状态', {
+            'description': '正常、删除和草稿',
+            'fields': (
+                'status',
+            ),
+        }),
     )
+
+    filter_horizontal = ('tag', )
 
     def operator(self, obj):
         return format_html(
