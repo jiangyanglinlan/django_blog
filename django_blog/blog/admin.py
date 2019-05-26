@@ -9,10 +9,11 @@ from .models import (
     Tag,
 )
 from .admin_forms import PostAdminForm
+from django_blog.base_admin import BaseOwnerAdmin
 
 
 @admin.register(Category, site=custom_site)
-class CategoryAdmin(admin.ModelAdmin):
+class CategoryAdmin(BaseOwnerAdmin):
     form = PostAdminForm
     list_display = (
         'name',
@@ -28,10 +29,6 @@ class CategoryAdmin(admin.ModelAdmin):
         'is_nav',
     )
 
-    def save_model(self, request, obj, form, change):
-        obj.owner = request.user
-        return super(CategoryAdmin, self).save_model(request, obj, form, change)
-
     def post_count(self, obj):
         return obj.post_set.count()
 
@@ -39,7 +36,7 @@ class CategoryAdmin(admin.ModelAdmin):
 
 
 @admin.register(Tag, site=custom_site)
-class TagAdmin(admin.ModelAdmin):
+class TagAdmin(BaseOwnerAdmin):
     list_display = (
         'name',
         'status',
@@ -50,10 +47,6 @@ class TagAdmin(admin.ModelAdmin):
         'name',
         'status',
     )
-
-    def save_model(self, request, obj, form, change):
-        obj.owner = request.user
-        return super(TagAdmin, self).save_model(request, obj, form, change)
 
 
 class CategoryOwnerFilter(admin.SimpleListFilter):
@@ -74,7 +67,7 @@ class CategoryOwnerFilter(admin.SimpleListFilter):
 
 
 @admin.register(Post, site=custom_site)
-class PostAdmin(admin.ModelAdmin):
+class PostAdmin(BaseOwnerAdmin):
     form = PostAdminForm
     list_display = [
         'title',
@@ -92,9 +85,6 @@ class PostAdmin(admin.ModelAdmin):
     # 动作相关的配置在顶部和底部均显示
     actions_on_top = True
     actions_on_bottom = True
-
-    # 隐藏 owner
-    exclude = ('owner', )
 
     fieldsets = (
         ('文章分类', {
@@ -126,11 +116,5 @@ class PostAdmin(admin.ModelAdmin):
             '<a href="{}">编辑</a>',
             reverse('cus_admin:blog_post_change', args=(obj.id, ))
         )
+    operator.short_description = '操作'
 
-    def save_model(self, request, obj, form, change):
-        obj.owner = request.user
-        return super(PostAdmin, self).save_model(request, obj, form, change)
-
-    def get_queryset(self, request):
-        qs = super(PostAdmin, self).get_queryset(request)
-        return qs.filter(owner=request.user)
