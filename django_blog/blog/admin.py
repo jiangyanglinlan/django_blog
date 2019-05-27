@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.urls import reverse
 from django.utils.html import format_html
+from django.contrib.admin.models import LogEntry
 
 from django_blog.custom_site import custom_site
 from .models import (
@@ -118,3 +119,13 @@ class PostAdmin(BaseOwnerAdmin):
         )
     operator.short_description = '操作'
 
+
+@admin.register(LogEntry, site=custom_site)
+class LogEntryAdmin(admin.ModelAdmin):
+    list_display = [
+        'object_repr',
+        'object_id',
+        'action_flag',
+        'user',
+        'change_message',
+    ]
