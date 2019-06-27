@@ -23,6 +23,24 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+    @classmethod
+    def get_navs(cls):
+        categories = cls.objects.filter(status=cls.STATUS_NORMAL)
+        nav_categories = []
+        normal_categories = []
+        # 使用 if 判断, 减少一次额外的 IO 操作
+        for cate in categories:
+            if cate.is_nav is True:
+                nav_categories.append(cate)
+            else:
+                normal_categories.append(cate)
+
+        categories_navs = {
+            'navs': nav_categories,
+            'categories': normal_categories,
+        }
+        return categories_navs
+
 
 class Tag(models.Model):
     STATUS_NORMAL = 1
@@ -71,3 +89,34 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    @staticmethod
+    def get_by_tag(tag_id):
+        # 根据 tag 的 id 获取 tag 和该 tag 下的 posts
+        try:
+            tag = Tag.objects.get(id=tag_id)
+        except Tag.DoesNotExist:
+            tag = None
+            post_list = []
+        else:
+            post_list = tag.post_set.filter(status=Post.STATUS_NORMAL).select_related('owner', 'category')
+        return post_list, tag
+
+    @staticmethod
+    def get_by_category(category_id):
+        # 根据 category 的 id 获取 category 和该 category 下的 posts
+        try:
+            category = Category.objects.get(id=category_id)
+        except Category.DoesNotExise:
+            category = None
+            post_list = []
+        else:
+            post_list = category.post_set.filter(status=Post.STATUS_NORMAL).select_related('owner', 'category')
+        return post_list, category
+
+    @classmethod
+    def lastest_posts(cls):
+        queryset = cls.objects.filter(status=cls.STATUS_NORMAL)
+        return queryset
+
+
