@@ -16,21 +16,23 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-
 from blog.views import (
-    post_list,
-    post_detail,
+    IndexView,
+    CategoryView,
+    TagView,
+    PostDetailView,
 )
 from config.views import links
 from django_blog.custom_site import custom_site
+
 
 urlpatterns = [
     path('super_admin/', admin.site.urls, name='super-admin'),
     path('admin/', custom_site.urls, name='admin'),
 
-    path('', post_list, name='index'),  # 主页
-    path('category/<int:category_id>/', post_list, name='category-list'),  # 分类
-    path('tag/<int:tag_id>/', post_list, name='tag-list'),  # 标签
-    path('post/<int:post_id>.html', post_detail, name='post-detail'),  # 文章
+    path('', IndexView.as_view(), name='index'),  # 主页
+    path('category/<int:category_id>/', CategoryView.as_view(), name='category-list'),  # 分类
+    path('tag/<int:tag_id>/', TagView.as_view(), name='tag-list'),  # 标签
+    path('post/<int:post_id>.html', PostDetailView.as_view(), name='post-detail'),  # 文章
     path('links/', links, name='links')  # 友链
 ]

@@ -8,8 +8,8 @@
     {% block header %}
         <div>
             顶部分类:
-            {% for cate in categories %}
-                <a href="{% url 'category-list' cate.id %}">{{ cate.name }}</a>
+            {% for nav in navs %}
+                <a href="{% url 'category-list' nav.id %}">{{ nav.name }}</a>
             {% endfor %}
         </div>
     {% endblock %}
