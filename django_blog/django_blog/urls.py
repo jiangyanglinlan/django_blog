@@ -24,7 +24,7 @@ from blog.views import (
     SearchView,
     AuthorView,
 )
-from config.views import links
+from config.views import LinkListView
 from django_blog.custom_site import custom_site
 
 
@@ -37,6 +37,6 @@ urlpatterns = [
     path('tag/<int:tag_id>/', TagView.as_view(), name='tag-list'),  # 标签
     path('post/<int:post_id>.html', PostDetailView.as_view(), name='post-detail'),  # 文章
     path('search/', SearchView.as_view(), name='search'), # 搜索
-    path('author/<int:owner_id>', AuthorView.as_view(), name='author'),
-    path('links/', links, name='links')  # 友链
+    path('author/<int:owner_id>', AuthorView.as_view(), name='author'), # 用户
+    path('<int:owner_id>/links/', LinkListView.as_view(), name='links')  # 友链
 ]
