@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.sitemaps import views as sitemap_views
 
 from blog.views import (
     IndexView,
@@ -27,6 +28,8 @@ from blog.views import (
 from comment.views import CommentView
 from config.views import LinkListView
 from django_blog.custom_site import custom_site
+from blog.rss import LatestPostFeed
+from blog.sitemap import PostSitemap
 
 
 urlpatterns = [
@@ -41,4 +44,12 @@ urlpatterns = [
     path('author/<int:owner_id>', AuthorView.as_view(), name='author'),  # 用户
     path('<int:owner_id>/links/', LinkListView.as_view(), name='links'),  # 友链
     path('comment/', CommentView.as_view(), name='comment'),  # 评论
+
+    path('rss/', LatestPostFeed(), name='rss'),
+    path('feed/', LatestPostFeed(), name='rss'),
+    path('sitemap.xml/', sitemap_views.sitemap, {
+        'sitemaps': {
+            'posts': PostSitemap
+        }
+    }),
 ]
