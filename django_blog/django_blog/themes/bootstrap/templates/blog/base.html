@@ -42,7 +42,7 @@
         </nav>
         <div class="jumbotron">
             <h1 class="display-4">上海堡垒</h1>
-            <p class="head">基于 Django 的多人博客系统</p>
+            <p class="head">基于 Django 的博客系统</p>
         </div>
     </div>
     <div class="container main">
@@ -82,6 +82,9 @@
         </div>
         <div class="container power">
             <span class="text-muted">Power by 上海堡垒@jiangyanglinlan</span>
+            <span>
+                <a href="{% url 'cus_admin:login' %}">后台</a>
+            </span>
         </div>
         {% endblock %}
     </footer>
