@@ -1,7 +1,5 @@
 from django.db import models
 
-from blog.models import Post
-
 
 class Comment(models.Model):
     STATUS_NORMAL = 1
@@ -11,7 +9,7 @@ class Comment(models.Model):
         (STATUS_DELETE, '删除'),
     )
 
-    target = models.ForeignKey(Post, verbose_name='评论目标', on_delete=models.CASCADE)
+    target = models.CharField(max_length=200, verbose_name='评论目标')
     content = models.CharField(max_length=2000, verbose_name='内容')
     nickname = models.CharField(max_length=50, verbose_name='昵称')
     website = models.URLField(verbose_name='网站')
@@ -38,3 +36,7 @@ class Comment(models.Model):
         end_index = length - len(etc)
         c = c[:end_index] + etc
         return c
+
+    @classmethod
+    def get_by_target(cls, target):
+        return cls.objects.filter(target=target, status=cls.STATUS_NORMAL)
